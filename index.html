@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="author" content="Swagata Samanta" />
+  <meta name="description"
+    content="Graph Algorithms visualizer project which visualizes Different types of graph algorithms such as Path-finding algorithms, Topological Sorting" />
+
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="favicons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  <title> Graph Algorithms Visualizer </title>
+  <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/mdb.min.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+  <!-- Tabs navs -->
+  <ul class="nav nav-tabs nav-justified " id="tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active" id="path-finder" data-toggle="tab" href="#path-finder-tab" role="tab"
+        aria-controls="ex3-tabs-1" aria-selected="true">Shortest Path finding Algorithms</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="topological-sort" data-toggle="tab" href="#topological-sort-tab" role="tab"
+        aria-controls="ex3-tabs-3" aria-selected="false">Topological Sorting</a>
+    </li>
+  </ul>
+  <!-- Tabs navs -->
+
+  <!-- Tabs content Start-->
+  <!----------------------------------- Path Finding  ------------------------------------>
+  <div class="tab-content" id="ex2-content">
+    <div class="tab-pane fade show active" id="path-finder-tab" role="tabpanel" aria-labelledby="ex3-tab-1">
+      <header>
+        <nav class="buttons-container navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand">Shortest Path-Finding <br> Algorithms</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon" id="breakpoint-toggler"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <div class="btn-group shadow-5">
+                    <button type="button" class="btn btn-outline-info mr-2 dropdown-toggle mt-2"
+                      data-ripple-color="dark" id="path-finding-grp-btn" data-toggle="dropdown" aria-expanded="false">
+                      Path Finding Algorithms
+                    </button>
+
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" id="dijkstra">Dijkstra (UCS)</a></li>
+                      <li><a class="dropdown-item" id="bidirectional-dijkstra">Bidirectional Dijkstra (UCS)</a></li>
+                      <li><a class="dropdown-item" id="astar">A* (Manhattan Distance)</a></li>
+                      <li><a class="dropdown-item" id="bidirectional-astar">Bidirectional A*</a></li>
+                </li>
+              </ul>
+            </div>
+            <!-- <div> -->
+
+
+            <!-- </div> -->
+            <div class="btn-group shadow-0">
+              <button type="button" class="btn btn-outline-info mr-2 dropdown-toggle mt-2" data-toggle="dropdown"
+                id="maze-generation-grp-btn" aria-expanded="false">
+                Random Maze Generation Algorithms
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" id="maze-recursive-backtracker">Recursive Backtracker (real-time)</a>
+                </li>
+                <li><a class="dropdown-item" id="maze-animation-recursive-backtracker">Animated Recurisve
+                    Backtracker</a></li>
+              </ul>
+            </div>
+            <li class="nav-item">
+              <button disabled type="button" class="btn btn-outline-danger mr-2 ml-1 mt-2" data-ripple-color="light"
+                id="visualize">
+                Visualize
+              </button>
+            </li>
+            <li class="nav-item">
+              <button id="clear-path" disabled type="button" class="btn btn-outline-warning mr-2 ml-1 mt-2"
+                data-ripple-color="light">
+                Clear Path
+              </button>
+            </li>
+            <li class="nav-item">
+              <button id="clear" disabled type="button" class="btn btn-outline-warning mr-2 ml-1 mt-2"
+                data-ripple-color="light">
+                Clear All
+              </button>
+            </li>
+            </ul>
+
+            <li class="nav-item">
+              <label class="text-warning" for="grid-size"> Node Size: </label>
+              <input name="grid-size" type="range" class="form-range" id="size-slider" value="28" min="19" max="90" />
+            </li>
+          </div>
+          <!-- Collapsible wrapper -->
+    </div>
+    <!-- Container wrapper -->
+    </nav>
+    </header>
+    <main>
+      <section id="grid-helper">
+        <div class="helper-node-container">
+          <div data-toggle="tooltip" data-html="true"
+            title="<em><strong>Click</strong></em> and <u><b>drag</u></b> to move" id="start-node">
+          </div>
+          <div>
+            Start Node
+          </div>
+        </div>
+        <div class="helper-node-container">
+          <div data-toggle="tooltip" data-html="true"
+            title="<em><strong>Click</strong></em> and <u><b>drag</u></b> to move" id="end-node">
+          </div>
+          <div>
+            End Node
+          </div>
+        </div>
+        <div class="helper-node-container">
+          <div data-toggle="tooltip" data-html="true"
+            title="<em><strong>Click</strong></em> and <u><b>drag</u></b> to <b>Create</b><br/><em><strong>Right Click</strong></em> and <u><b>drag</u></b>  to <b>Remove</b>"
+            id="wall-node" class="justify-node">
+          </div>
+          <div> Wall Node</div>
+        </div>
+        <div class="helper-node-container">
+          <div data-toggle="tooltip" data-html="true"
+            title="<em><strong>Click+Shift/alt</strong></em> and <u><b>drag</u></b> to <b>Create</b><br/><em><strong>Right Click+Shift/alt</strong></em> and <u><b>drag</u></b>  to <b>Remove</b>"
+            id="weight-node" class="justify-node">
+          </div>
+          <div>
+            Weight Node
+          </div>
+        </div>
+        <div class="helper-node-container">
+          <div id="unvisited-node" class="justify-node">
+          </div>
+          <div>
+            Unvisited Node
+          </div>
+        </div>
+        <div class="helper-node-container">
+          <div id="current-node" class="justify-node">
+          </div>
+          <div>Current Node</div>
+        </div>
+        <div class="helper-node-container">
+          <div id="visited-container" class="justify-node">
+            <div id="visited-node-forward">
+            </div>
+            <div id="visited-node-backward">
+            </div>
+          </div>
+          <div> Visited Node</div>
+        </div>
+        <div class="helper-node-container">
+          <div id="visited-node-backtrack" class="justify-node">
+          </div>
+          <div>Backtrack Node</div>
+        </div>
+      </section>
+      <section id="grid-container">
+      </section>
+    </main>
+  </div>
+
+  <!---------------------------------- Topological Sort  ------------------------------------->
+  <div class="tab-pane fade" id="topological-sort-tab" role="tabpanel" aria-labelledby="ex3-tab-3">
+    <header>
+      <nav class="buttons-container navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand">Topological Sort</a>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section id="network-container">
+        <div id="definition">
+          <p>In computer science, a topological sort or topological ordering of a directed graph is
+            a linear ordering of its vertices such that for every directed edge uv from vertex u to vertex v, u
+            comes before v in the ordering.
+            For instance, the vertices of the graph may represent tasks to be performed,
+            and the edges may represent constraints that one task must be performed before
+            another; in this application, a topological ordering is just a valid sequence
+            for the tasks. A topological ordering is possible if and only if the graph has
+            no directed cycles, that is, if it is a directed acyclic graph (DAG)
+          </p>
+        </div>
+        <form name="tasks">
+          <!-- Task Input -->
+          <div id="tasks-input">
+            <!-- Task_1  -->
+            <div id="task-1-input" class="row g-3 align-items-center mt-1 ml-2">
+              <div class="form-outline col-auto mb-2 mr-2">
+                <input type="text" name="task-1" class="form-control" placeholder="Buy Groceries"
+                  aria-describedby="task-1" required />
+                <label class="form-label" for="task-1">Task #1</label>
+              </div>
+              <div class="form-outline col-auto">
+                <input type="text" name="preq-1" class="form-control" placeholder="Dress" aria-describedby="preq-1"
+                  required />
+                <label class="form-label" for="preq-1">Task #1 Prerequisites</label>
+              </div>
+              <div class="col-auto">
+                <span id="textExample2" class="form-text mb-3">
+                  Prerequisites Must be comma separated Values
+                </span>
+              </div>
+            </div>
+            <!-- Task_2  -->
+            <div id="task-2-input" hidden class="row g-3 align-items-center ml-2">
+              <div class="form-outline col-auto mb-2 mr-2">
+                <input type="text" name="task-2" class="form-control" placeholder="Dress" aria-describedby="task-1"
+                  required />
+                <label class="form-label" for="task-2">Task #2</label>
+              </div>
+              <div class="form-outline mb-2 col-auto">
+                <input type="text" name="preq-2" class="form-control" placeholder="Wakeup" aria-describedby="preq-1"
+                  required />
+                <label class="form-label" for="preq-2">Task #2 Prerequisites</label>
+              </div>
+            </div>
+            <!-- Task_3 -->
+            <div id="task-3-input" hidden class="row g-3 align-items-center ml-2">
+              <div class="form-outline col-auto mb-2 mr-2">
+                <input type="text" name="task-3" placeholder="Wakeup" class="form-control" aria-describedby="task-1"
+                  required />
+                <label class="form-label" for="task-1">Task #3</label>
+              </div>
+              <div class="form-outline mb-2 col-auto">
+                <input type="text" name="preq-3" placeholder="Sleep" class="form-control" aria-describedby="preq-1"
+                  required />
+                <label class="form-label" for="preq-3">Task #3 Prerequisites</label>
+              </div>
+            </div>
+            <!-- Task_4  -->
+            <div id="task-4-input" hidden class="row g-3 align-items-center ml-2">
+              <div class="form-outline col-auto mb-2 mr-2">
+                <input type="text" name="task-4" placeholder="You're still here?" class="form-control"
+                  aria-describedby="task-1" required />
+                <label class="form-label" for="task-4">Task #4</label>
+              </div>
+              <div class="form-outline mb-2 col-auto border">
+                <input type="text" name="preq-4" class="form-control" placeholder="I'm out of ideas"
+                  aria-describedby="preq-1" required />
+                <label class="form-label" for="preq-1">Task #4 Prerequisites</label>
+              </div>
+            </div>
+            <!-- Task_5  -->
+            <div id="task-5-input" hidden class="row g-3 align-items-center ml-2">
+              <div class="form-outline col-auto mb-2 mr-2">
+                <input type="text" name="task-5" class="form-control" placeholder="Let's finish it with a cycle"
+                  aria-describedby="task-1" required />
+                <label class="form-label" for="task-1">Task #5</label>
+              </div>
+              <div class="form-outline mb-2 col-auto">
+                <input type="text" name="preq-5" class="form-control" placeholder="Let's finish it with a cycle"
+                  aria-describedby="preq-1" required />
+                <label class="form-label" for="preq-1">Task #5 Prerequisites</label>
+              </div>
+            </div>
+          </div>
+          <!-- Submit button -->
+          <div id="tasks-submit" class="mb-2">
+            <button id="task-adder" class="btn btn-danger ml-2 mt-2">
+              Add more
+            </button>
+            <button id="network-visualizer" class="btn btn-danger mt-2">
+              Visualize
+            </button>
+          </div>
+        </form>
+        <div id="result"></div>
+        <div id="mynetwork"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Tabs content End-->
+
+  <!-- Click to see shortcuts  -->
+  <div id="shortcut-toast" class="toast bg-info text-white" role="alert" aria-live="assertive" aria-atomic="true"
+    data-autohide="false" data-content="11000">
+    <div class="toast-header bg-info text-white">
+      <i class="fas fa-info-circle fa-lg mr-2"></i>
+      <strong class="mr-auto">Path-Finder</strong>
+      <!-- <button type="button" class="ml-2 my-1 close text-white" data-dismiss="toast"
+              aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button> -->
+    </div>
+    <div class="toast-body">
+      <b><u>Click/Hover</u></b> on icons to see <u><b>Shortcuts</u></b>
+    </div>
+  </div>
+
+  <!-- If Failed in Topological Sort  -->
+  <div id="fail-kahn-toast" class="toast bg-danger text-white" role="alert" aria-live="assertive" aria-atomic="true"
+    data-autohide="false">
+    <div class="toast-header bg-danger text-white">
+      <i class="fas fa-exclamation-triangle fa-lg mr-2"></i>
+      <strong class="mr-auto">Topological Sort</strong>
+    </div>
+    <div class="toast-body">
+      <b>Failed</b> to do <em>Topological Sort</em>, there exists a <b><u>Cycle</b></u>.
+    </div>
+  </div>
+
+  <!-- Move Start and End nodes -->
+  <div id="info-toast" class="toast bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true"
+    data-autohide="false">
+    <div class="toast-header bg-success text-white">
+      <i class="fas fa-info-circle fa-lg mr-2"></i>
+      <strong class="mr-auto">Path-Finder</strong>
+      <button type="button" class="ml-2 my-1 close text-white" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <!-- Move start and end node  -->
+    <div class="toast-body">
+      You can <b><u>Drag</u></b> <b>Start</b> or <b>End</b> to see how path is affected in realtime
+    </div>
+
+  </div>
+  <!-- Danger toast -->
+  <div id="fail-toast" class="toast bg-danger text-white" data-autohide="false" role="alert" aria-live="assertive"
+    aria-atomic="true">
+    <div class="toast-header bg-danger text-white">
+      <i class="fas fa-exclamation-triangle fa-lg mr-2"></i>
+      <strong class="mr-auto">Path-Finder</strong>
+      <button type="button" class="ml-2 my-1 close text-white" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      Sorry, I wasn't able to find End Node
+    </div>
+  </div>
+
+  <!-- Footer  -->
+
+  <footer>
+    <div class="text-center p-3 bg-dark">
+      <a class="text-light">Swagata Samanta</a>
+      <div>
+        <a class="btn btn-primary btn-floating" style="background-color: #0082ca;"
+          href="https://www.linkedin.com/in/swagata-samanta-201698238/" target="_blank" role="button"><i
+            class="fab fa-linkedin-in"></i></a>
+        <a class="btn btn-primary btn-floating" style="background-color: #333333;"
+          href="https://github.com/swagatasamanta" target="_blank" role="button"><i class="fab fa-github"></i></a>
+
+      </div>
+    </div>
+  </footer>
+
+
+  <script src="script/app.js"></script>
+  <script src="script/astar.js"></script>
+  <script src="script/bidirectional.js"></script>
+  <script src="script/common.js"></script>
+  <script src="script/dijkstra.js"></script>
+  <script src="script/grid.js"></script>
+  <script src="script/mdb.min.js"></script>
+  <script src="script/network.js"></script>
+  <script src="script/node.js"></script>
+  <script src="script/recursivebacktracker.js"></script>
+  <script src="script/vertix.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.js"></script>
+
+
+</body>
+
+</html>
